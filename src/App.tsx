@@ -1,13 +1,47 @@
 import { useState } from 'react';
 import './App.css';
 
+type Feature =
+  | 'home'
+  | 'scams'
+  | 'checker'
+  | 'help'
+  | 'voice'
+  | 'alerts'
+  | 'notifications'
+  | 'community';
+
+type Contact = {
+  id: number;
+  name: string;
+  phone: string;
+};
+
+type Notification = {
+  id: number;
+  title: string;
+  message: string;
+  date: string;
+  read: boolean;
+};
+
+type ScamAlert = {
+  title: string;
+  message: string;
+  advice: string;
+};
+
+type ScamResult = 'high' | 'medium' | 'low' | 'empty' | null;
+
 function App() {
-  const [activeFeature, setActiveFeature] = useState('home');
-  const [notifications, setNotifications] = useState([
+  const [activeFeature, setActiveFeature] = useState<Feature>('home');
+
+  const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: 1,
       title: 'New Scam Warning',
-      message: 'Be careful of messages asking for your banking information.',
+      message:
+        'Be careful of messages asking for your banking information.',
       date: 'Today',
       read: false,
     },
@@ -19,6 +53,7 @@ function App() {
       read: false,
     },
   ]);
+
   return (
     <div className="app">
       <header className="header">
@@ -27,7 +62,6 @@ function App() {
       </header>
 
       <main className="main">
-        {/* HOME */}
         {activeFeature === 'home' && (
           <>
             <section className="welcome">
@@ -74,6 +108,7 @@ function App() {
                 <strong>Notifications</strong>
                 <span>View safety reminders</span>
               </button>
+
               <button onClick={() => setActiveFeature('community')}>
                 👥
                 <strong>Community Support</strong>
@@ -181,11 +216,11 @@ function ScamAwareness() {
 
 function ScamChecker() {
   const [message, setMessage] = useState('');
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<ScamResult>(null);
 
   const checkScam = () => {
     if (!message.trim()) {
-      setResult({ type: 'empty' });
+      setResult('empty');
       return;
     }
 
@@ -205,7 +240,9 @@ function ScamChecker() {
       'bank details',
     ];
 
-    const foundWarnings = warningWords.filter((word) => text.includes(word));
+    const foundWarnings = warningWords.filter((word) =>
+      text.includes(word)
+    );
 
     if (foundWarnings.length >= 3) {
       setResult('high');
@@ -277,9 +314,18 @@ function EmergencyHelp() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
-  const [contacts, setContacts] = useState(() => {
+  const [contacts, setContacts] = useState<Contact[]>(() => {
     const saved = localStorage.getItem('elderEaseContacts');
-    return saved ? JSON.parse(saved) : [];
+
+    if (!saved) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(saved) as Contact[];
+    } catch {
+      return [];
+    }
   });
 
   const addContact = () => {
@@ -288,7 +334,7 @@ function EmergencyHelp() {
       return;
     }
 
-    const newContact = {
+    const newContact: Contact = {
       id: Date.now(),
       name: name.trim(),
       phone: phone.trim(),
@@ -298,7 +344,10 @@ function EmergencyHelp() {
 
     setContacts(updatedContacts);
 
-    localStorage.setItem('elderEaseContacts', JSON.stringify(updatedContacts));
+    localStorage.setItem(
+      'elderEaseContacts',
+      JSON.stringify(updatedContacts)
+    );
 
     setName('');
     setPhone('');
@@ -306,19 +355,26 @@ function EmergencyHelp() {
     alert('Trusted contact added successfully.');
   };
 
-  const deleteContact = (id) => {
-    const updatedContacts = contacts.filter((contact) => contact.id !== id);
+  const deleteContact = (id: number) => {
+    const updatedContacts = contacts.filter(
+      (contact: Contact) => contact.id !== id
+    );
 
     setContacts(updatedContacts);
 
-    localStorage.setItem('elderEaseContacts', JSON.stringify(updatedContacts));
+    localStorage.setItem(
+      'elderEaseContacts',
+      JSON.stringify(updatedContacts)
+    );
   };
 
-  const callContact = (phone, name) => {
-    const confirmed = window.confirm(`Are you sure you want to call ${name}?`);
+  const callContact = (phoneNumber: string, contactName: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to call ${contactName}?`
+    );
 
     if (confirmed) {
-      window.location.href = `tel:${phone}`;
+      window.location.href = `tel:${phoneNumber}`;
     }
   };
 
@@ -343,25 +399,17 @@ function EmergencyHelp() {
 
       <div className="emergency-warning">
         <h3>⚠️ FIRST — STAY SAFE</h3>
-
         <p>Do not send money.</p>
-
         <p>Do not share your PIN, password or OTP.</p>
-
         <p>Do not click suspicious links.</p>
-
         <p>Speak to someone you trust.</p>
       </div>
-
-      {/* EMERGENCY SERVICES */}
 
       <button className="help-button" onClick={callEmergency}>
         🚨
         <strong>EMERGENCY SERVICES</strong>
         <span>Call 112 for urgent assistance</span>
       </button>
-
-      {/* TRUSTED CONTACTS */}
 
       <h2>👨‍👩‍👧 Trusted Contacts</h2>
 
@@ -387,17 +435,14 @@ function EmergencyHelp() {
         + ADD TRUSTED CONTACT
       </button>
 
-      {/* SAVED CONTACTS */}
-
       {contacts.length > 0 && (
         <div>
           <h3>My Trusted Contacts</h3>
 
-          {contacts.map((contact) => (
+          {contacts.map((contact: Contact) => (
             <div className="contact-card" key={contact.id}>
               <div>
                 <strong>{contact.name}</strong>
-
                 <p>{contact.phone}</p>
               </div>
 
@@ -417,8 +462,6 @@ function EmergencyHelp() {
         </div>
       )}
 
-      {/* BANK HELP */}
-
       <h2>🏦 Bank Help</h2>
 
       <div className="info-card">
@@ -432,8 +475,6 @@ function EmergencyHelp() {
         </p>
       </div>
 
-      {/* FINAL REMINDER */}
-
       <div className="warning">
         <h3>❤️ You Are Not Alone</h3>
 
@@ -445,77 +486,126 @@ function EmergencyHelp() {
     </section>
   );
 }
+
 /* =========================
    VOICE HELP
 ========================= */
 
-function VoiceHelp({ setActiveFeature }) {
+interface VoiceHelpProps {
+  setActiveFeature: (feature: Feature) => void;
+}
+
+function VoiceHelp({ setActiveFeature }: VoiceHelpProps) {
   const [listening, setListening] = useState(false);
-  const [message, setMessage] = useState('Tap the button and speak.');
+  const [message, setMessage] = useState(
+    'Tap the button and tell Elder Ease what you need.'
+  );
 
   const startVoice = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognitionAPI =
+      (window as typeof window & {
+        SpeechRecognition?: new () => SpeechRecognitionInstance;
+        webkitSpeechRecognition?: new () => SpeechRecognitionInstance;
+      }).SpeechRecognition ||
+      (window as typeof window & {
+        webkitSpeechRecognition?: new () => SpeechRecognitionInstance;
+      }).webkitSpeechRecognition;
 
-    if (!SpeechRecognition) {
-      setMessage('Voice recognition is not supported by this browser.');
+    if (!SpeechRecognitionAPI) {
+      setMessage(
+        'Voice help is not supported by this browser. Please use the buttons instead.'
+      );
       return;
     }
 
-    const recognition = new SpeechRecognition();
+    const recognition = new SpeechRecognitionAPI();
 
     recognition.lang = 'en-ZA';
-
     recognition.continuous = false;
-
     recognition.interimResults = false;
 
     setListening(true);
-
-    setMessage('🎙️ Listening...');
+    setMessage('🎙️ Listening... Please speak now.');
 
     recognition.start();
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       const speech = event.results[0][0].transcript.toLowerCase();
 
       setListening(false);
 
-      if (speech.includes('scam')) {
+      if (
+        speech.includes('scam') ||
+        speech.includes('scams') ||
+        speech.includes('safety')
+      ) {
         setMessage('Opening Scam Awareness...');
 
         setTimeout(() => {
           setActiveFeature('scams');
-        }, 800);
-      } else if (speech.includes('check') || speech.includes('message')) {
-        setMessage('Opening Scam Checker...');
+        }, 1000);
+      } else if (
+        speech.includes('check') ||
+        speech.includes('message') ||
+        speech.includes('suspicious')
+      ) {
+        setMessage('Opening the Scam Checker...');
 
         setTimeout(() => {
           setActiveFeature('checker');
-        }, 800);
-      } else if (speech.includes('help') || speech.includes('emergency')) {
+        }, 1000);
+      } else if (
+        speech.includes('help') ||
+        speech.includes('emergency')
+      ) {
         setMessage('Opening Emergency Help...');
 
         setTimeout(() => {
           setActiveFeature('help');
-        }, 800);
-      } else if (speech.includes('alert')) {
+        }, 1000);
+      } else if (
+        speech.includes('alert') ||
+        speech.includes('alerts') ||
+        speech.includes('warnings')
+      ) {
         setMessage('Opening Scam Alerts...');
 
         setTimeout(() => {
           setActiveFeature('alerts');
-        }, 800);
+        }, 1000);
+      } else if (
+        speech.includes('notification') ||
+        speech.includes('notifications')
+      ) {
+        setMessage('Opening Notifications...');
+
+        setTimeout(() => {
+          setActiveFeature('notifications');
+        }, 1000);
+      } else if (
+        speech.includes('community') ||
+        speech.includes('support') ||
+        speech.includes('contacts')
+      ) {
+        setMessage('Opening Community Support...');
+
+        setTimeout(() => {
+          setActiveFeature('community');
+        }, 1000);
       } else {
         setMessage(
-          'Try saying: Show me scams, check a message, or I need help.'
+          "I did not understand. Try saying: 'Show me scams', 'Check a message', 'I need help', or 'Show alerts'."
         );
       }
     };
 
     recognition.onerror = () => {
       setListening(false);
-
       setMessage('Sorry, I could not hear you. Please try again.');
+    };
+
+    recognition.onend = () => {
+      setListening(false);
     };
   };
 
@@ -534,192 +624,66 @@ function VoiceHelp({ setActiveFeature }) {
       </button>
 
       <div className="voice-message">
-        <h3>Try saying:</h3>
+        <h3>What can I say?</h3>
+
+        <p>Try saying:</p>
 
         <ul>
           <li>"Show me scams"</li>
           <li>"Check a message"</li>
           <li>"I need help"</li>
           <li>"Show alerts"</li>
+          <li>"Show notifications"</li>
+          <li>"Community support"</li>
         </ul>
       </div>
 
       <div className="voice-status">
         <h3>Voice Assistant</h3>
-
         <p>{message}</p>
       </div>
     </section>
   );
-  function VoiceHelp({ setActiveFeature }) {
-    const [listening, setListening] = useState(false);
-    const [message, setMessage] = useState(
-      'Tap the button and tell Elder Ease what you need.'
-    );
+}
 
-    const startVoice = () => {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
+/* =========================
+   SPEECH RECOGNITION TYPES
+========================= */
 
-      if (!SpeechRecognition) {
-        setMessage(
-          'Voice help is not supported by this browser. Please use the buttons instead.'
-        );
-        return;
-      }
+interface SpeechRecognitionInstance {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  start: () => void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+}
 
-      const recognition = new SpeechRecognition();
-
-      recognition.lang = 'en-ZA';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-
-      setListening(true);
-      setMessage('🎙️ Listening... Please speak now.');
-
-      recognition.start();
-
-      recognition.onresult = (event) => {
-        const speech = event.results[0][0].transcript.toLowerCase();
-
-        setListening(false);
-
-        setMessage(`You said: "${speech}"`);
-
-        /* SCAM AWARENESS */
-
-        if (
-          speech.includes('scam') ||
-          speech.includes('scams') ||
-          speech.includes('safety')
-        ) {
-          setMessage('Opening Scam Awareness...');
-
-          setTimeout(() => {
-            setActiveFeature('scams');
-          }, 1000);
-        } else if (
-          /* SCAM CHECKER */
-          speech.includes('check') ||
-          speech.includes('check a message') ||
-          speech.includes('suspicious message')
-        ) {
-          setMessage('Opening the Scam Checker...');
-
-          setTimeout(() => {
-            setActiveFeature('checker');
-          }, 1000);
-        } else if (
-          /* EMERGENCY HELP */
-          speech.includes('help') ||
-          speech.includes('emergency') ||
-          speech.includes('i need help')
-        ) {
-          setMessage('Opening Emergency Help...');
-
-          setTimeout(() => {
-            setActiveFeature('help');
-          }, 1000);
-        } else if (
-          /* SCAM ALERTS */
-          speech.includes('alert') ||
-          speech.includes('alerts') ||
-          speech.includes('warnings')
-        ) {
-          setMessage('Opening Scam Alerts...');
-
-          setTimeout(() => {
-            setActiveFeature('alerts');
-          }, 1000);
-        } else if (
-          /* NOTIFICATIONS */
-          speech.includes('notification') ||
-          speech.includes('notifications')
-        ) {
-          setMessage('Opening Notifications...');
-
-          setTimeout(() => {
-            setActiveFeature('notifications');
-          }, 1000);
-        } else if (
-          /* COMMUNITY */
-          speech.includes('community') ||
-          speech.includes('support') ||
-          speech.includes('contacts')
-        ) {
-          setMessage('Opening Community Support...');
-
-          setTimeout(() => {
-            setActiveFeature('community');
-          }, 1000);
-        } else {
-          /* DID NOT UNDERSTAND */
-          setMessage(
-            "I did not understand. Try saying: 'Show me scams', 'Check a message', 'I need help', 'Show alerts', or 'Community support'."
-          );
-        }
-      };
-
-      recognition.onerror = () => {
-        setListening(false);
-
-        setMessage('Sorry, I could not hear you. Please try again.');
-      };
-
-      recognition.onend = () => {
-        setListening(false);
+interface SpeechRecognitionEvent {
+  results: {
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
       };
     };
-
-    return (
-      <section className="page">
-        <h2>🎙️ Voice Help</h2>
-
-        <p>Speak to Elder Ease instead of typing.</p>
-
-        <button
-          className="voice-button"
-          onClick={startVoice}
-          disabled={listening}
-        >
-          {listening ? '🎙️ LISTENING...' : '🎙️ TAP TO SPEAK'}
-        </button>
-
-        <div className="voice-message">
-          <h3>What can I say?</h3>
-
-          <p>Try saying:</p>
-
-          <ul>
-            <li>"Show me scams"</li>
-            <li>"Check a message"</li>
-            <li>"I need help"</li>
-            <li>"Show alerts"</li>
-            <li>"Show notifications"</li>
-            <li>"Community support"</li>
-          </ul>
-        </div>
-
-        <div className="voice-status">
-          <h3>Voice Assistant</h3>
-
-          <p>{message}</p>
-        </div>
-
-        <p>
-          You can always use the normal buttons if you prefer not to use voice.
-        </p>
-      </section>
-    );
-  }
+  };
 }
 
 /* =========================
    SCAM ALERTS
 ========================= */
 
-function ScamAlerts({ notifications, setNotifications }) {
-  const alerts = [
+interface ScamAlertsProps {
+  notifications: Notification[];
+  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+}
+
+function ScamAlerts({
+  notifications,
+  setNotifications,
+}: ScamAlertsProps) {
+  const alerts: ScamAlert[] = [
     {
       title: 'BANKING SCAM',
       message:
@@ -728,24 +692,28 @@ function ScamAlerts({ notifications, setNotifications }) {
     },
     {
       title: 'WHATSAPP SCAM',
-      message: 'Someone may pretend to be a family member and ask for money.',
+      message:
+        'Someone may pretend to be a family member and ask for money.',
       advice: 'Call the family member directly to check.',
     },
     {
       title: 'FAKE PRIZE SCAM',
-      message: 'You may receive a message saying you won money or a prize.',
+      message:
+        'You may receive a message saying you won money or a prize.',
       advice: 'Never pay money to claim a prize.',
     },
     {
       title: 'PHISHING SCAM',
-      message: 'A message may ask you to click a suspicious link.',
+      message:
+        'A message may ask you to click a suspicious link.',
       advice: 'Do not click suspicious links.',
     },
   ];
 
-  const addNotification = (scamAlert) => {
+  const addNotification = (scamAlert: ScamAlert) => {
     const alreadyAdded = notifications.some(
-      (notification) => notification.title === alert.title
+      (notification: Notification) =>
+        notification.title === scamAlert.title
     );
 
     if (alreadyAdded) {
@@ -753,15 +721,15 @@ function ScamAlerts({ notifications, setNotifications }) {
       return;
     }
 
-    const newNotification = {
+    const newNotification: Notification = {
       id: Date.now(),
-      title: alert.title,
-      message: alert.advice,
+      title: scamAlert.title,
+      message: scamAlert.advice,
       date: 'Just now',
       read: false,
     };
 
-    setNotifications([...notifications, newNotification]);
+    setNotifications((previous) => [...previous, newNotification]);
 
     alert('Scam alert added to your notifications.');
   };
@@ -772,27 +740,27 @@ function ScamAlerts({ notifications, setNotifications }) {
 
       <p>Important warnings to help you stay safe from scams.</p>
 
-      {alerts.map((alert, index) => (
+      {alerts.map((scamAlert: ScamAlert, index: number) => (
         <div className="alert-card" key={index}>
-          <h3>⚠️ {alert.title}</h3>
+          <h3>⚠️ {scamAlert.title}</h3>
 
           <p>
             <strong>What to look out for:</strong>
           </p>
 
-          <p>{alert.message}</p>
+          <p>{scamAlert.message}</p>
 
           <div className="alert-advice">
             <p>
               <strong>Remember:</strong>
             </p>
 
-            <p>{alert.advice}</p>
+            <p>{scamAlert.advice}</p>
           </div>
 
           <button
             className="primary-button"
-            onClick={() => addNotification(alert)}
+            onClick={() => addNotification(scamAlert)}
           >
             🔔 SAVE AS NOTIFICATION
           </button>
@@ -806,57 +774,36 @@ function ScamAlerts({ notifications, setNotifications }) {
    NOTIFICATIONS
 ========================= */
 
-function Notifications() {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: 'New Scam Warning',
-      message: 'Be careful of messages asking for your banking information.',
-      date: 'Today',
-      read: false,
-    },
-    {
-      id: 2,
-      title: 'Safety Reminder',
-      message: 'Never share your PIN, password or OTP with anyone.',
-      date: 'Today',
-      read: false,
-    },
-    {
-      id: 3,
-      title: 'WhatsApp Safety',
-      message:
-        'If someone asks for money on WhatsApp, call them directly to check.',
-      date: 'Yesterday',
-      read: false,
-    },
-    {
-      id: 4,
-      title: 'Link Safety',
-      message:
-        'Do not click links in unexpected messages. Contact the organisation directly.',
-      date: 'Yesterday',
-      read: true,
-    },
-  ]);
+interface NotificationsProps {
+  notifications: Notification[];
+  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+}
 
-  const markAsRead = (id) => {
-    setNotifications(
-      notifications.map((notification) =>
-        notification.id === id ? { ...notification, read: true } : notification
+function Notifications({
+  notifications,
+  setNotifications,
+}: NotificationsProps) {
+  const markAsRead = (id: number) => {
+    setNotifications((previous) =>
+      previous.map((notification: Notification) =>
+        notification.id === id
+          ? { ...notification, read: true }
+          : notification
       )
     );
   };
 
-  const deleteNotification = (id) => {
-    setNotifications(
-      notifications.filter((notification) => notification.id !== id)
+  const deleteNotification = (id: number) => {
+    setNotifications((previous) =>
+      previous.filter(
+        (notification: Notification) => notification.id !== id
+      )
     );
   };
 
   const markAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
+    setNotifications((previous) =>
+      previous.map((notification: Notification) => ({
         ...notification,
         read: true,
       }))
@@ -864,7 +811,7 @@ function Notifications() {
   };
 
   const unreadCount = notifications.filter(
-    (notification) => !notification.read
+    (notification: Notification) => !notification.read
   ).length;
 
   return (
@@ -872,8 +819,6 @@ function Notifications() {
       <h2>🔔 Notifications</h2>
 
       <p>Important safety reminders and scam warnings.</p>
-
-      {/* UNREAD COUNT */}
 
       <div className="notification-count">
         {unreadCount === 0
@@ -883,24 +828,19 @@ function Notifications() {
             }.`}
       </div>
 
-      {/* MARK ALL AS READ */}
-
       {unreadCount > 0 && (
         <button className="primary-button" onClick={markAllAsRead}>
           ✓ MARK ALL AS READ
         </button>
       )}
 
-      {/* NOTIFICATIONS */}
-
       {notifications.length === 0 ? (
         <div className="info-card">
           <h3>✓ All Clear</h3>
-
           <p>You have no notifications at the moment.</p>
         </div>
       ) : (
-        notifications.map((notification) => (
+        notifications.map((notification: Notification) => (
           <div className="notification-card" key={notification.id}>
             <div className="notification-icon">
               {notification.read ? '✓' : '⚠️'}
@@ -915,8 +855,6 @@ function Notifications() {
                 <strong>{notification.date}</strong>
               </p>
 
-              {/* MARK AS READ */}
-
               {!notification.read && (
                 <button
                   className="read-button"
@@ -925,8 +863,6 @@ function Notifications() {
                   ✓ MARK AS READ
                 </button>
               )}
-
-              {/* DELETE */}
 
               <button
                 className="read-button"
@@ -939,18 +875,23 @@ function Notifications() {
         ))
       )}
 
-      {/* SAFETY TIP */}
-
       <div className="warning">
         <h3>🛡️ Safety Tip</h3>
 
-        <p>When you receive a suspicious message, stop before taking action.</p>
+        <p>
+          When you receive a suspicious message, stop before taking action.
+        </p>
 
         <p>Ask someone you trust if you are unsure.</p>
       </div>
     </section>
   );
 }
+
+/* =========================
+   COMMUNITY SUPPORT
+========================= */
+
 function CommunitySupport() {
   const resources = [
     {
@@ -990,8 +931,8 @@ function CommunitySupport() {
       <h2>👥 Community Support</h2>
 
       <p>
-        You do not have to deal with a scam alone. These people and services can
-        help you.
+        You do not have to deal with a scam alone. These people and services
+        can help you.
       </p>
 
       {resources.map((resource, index) => (
