@@ -1,1 +1,521 @@
+/* =========================
+   ELDER EASE
+   Elderly-Friendly Design
+========================= */
+:root {
+  --dark-blue: #62a9ef;
+}
+* {
+  box-sizing: border-box;
+}
 
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #000000;
+}
+
+/* HEADER */
+
+.header {
+  background: #5398e7;
+  color: #ffffff;
+  text-align: center;
+  padding: 35px 20px;
+}
+
+.header h1 {
+  font-size: 48px;
+  margin: 0 0 10px;
+}
+
+.header p {
+  font-size: 22px;
+  margin: 0;
+}
+
+/* MAIN */
+
+.main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 35px 25px;
+}
+
+/* WELCOME */
+
+.welcome {
+  border: 4px solid #000000;
+  padding: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.welcome h2 {
+  font-size: 34px;
+  margin-top: 0;
+}
+
+.welcome p {
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+/* HOME BUTTONS */
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.buttons button {
+  background: #ffffff;
+  color: #000000;
+  border: 4px solid #000000;
+  border-radius: 12px;
+  min-height: 180px;
+  padding: 25px;
+  cursor: pointer;
+  font-size: 38px;
+  transition: 0.2s;
+}
+
+.buttons button:hover,
+.buttons button:focus {
+  background: #000000;
+  color: #ffffff;
+}
+
+.buttons strong {
+  display: block;
+  font-size: 26px;
+  margin: 12px 0;
+}
+
+.buttons span {
+  display: block;
+  font-size: 19px;
+}
+
+/* PAGES */
+
+.page {
+  border: 4px solid #000000;
+  padding: 30px;
+  background: #ffffff;
+}
+
+.page h2 {
+  font-size: 34px;
+  margin-top: 0;
+}
+
+.page h3 {
+  font-size: 25px;
+}
+
+.page p,
+.page li {
+  font-size: 21px;
+  line-height: 1.6;
+}
+
+/* INFORMATION CARDS */
+
+.info-card {
+  border: 3px solid #000000;
+  padding: 22px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.info-card h3 {
+  margin-top: 0;
+}
+
+/* WARNING */
+
+.warning,
+.emergency-warning {
+  border: 4px solid #000000;
+  padding: 22px;
+  margin: 25px 0;
+  border-radius: 8px;
+}
+
+.warning h3,
+.emergency-warning h3 {
+  margin-top: 0;
+}
+
+/* TEXT AREA */
+
+textarea {
+  width: 100%;
+  min-height: 200px;
+  border: 3px solid #000000;
+  padding: 18px;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  resize: vertical;
+  margin: 15px 0;
+}
+
+textarea:focus,
+input:focus {
+  outline: 4px solid #000000;
+}
+
+/* INPUTS */
+
+input {
+  width: 100%;
+  border: 3px solid #000000;
+  padding: 18px;
+  font-size: 20px;
+  margin: 10px 0 20px;
+}
+
+/* GENERAL BUTTONS */
+
+.primary-button,
+.help-button,
+.voice-button,
+.read-button,
+.contact-card button {
+  background: var(--dark-blue);
+  color: #ffffff;
+  border: 3px solid #120101d7;
+  padding: 18px 25px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.primary-button {
+  width: 100%;
+}
+
+.primary-button:hover,
+.help-button:hover,
+.voice-button:hover,
+.read-button:hover,
+.contact-card button:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* EMERGENCY BUTTON */
+
+.help-button {
+  width: 100%;
+  min-height: 100px;
+  margin: 15px 0;
+}
+
+.help-button strong {
+  display: block;
+  font-size: 24px;
+}
+
+.help-button span {
+  display: block;
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+/* CONTACTS */
+
+.contact-card {
+  border: 3px solid #000000;
+  padding: 22px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-radius: 8px;
+}
+
+.contact-card strong {
+  font-size: 23px;
+}
+
+.contact-card p {
+  margin-bottom: 0;
+}
+
+/* VOICE */
+
+.voice-button {
+  width: 100%;
+  min-height: 130px;
+  font-size: 28px;
+  margin: 20px 0;
+}
+
+.voice-message,
+.voice-status {
+  border: 3px solid #000000;
+  padding: 22px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+/* ALERTS */
+
+.alert-card {
+  border: 4px solid #000000;
+  padding: 25px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.alert-card h3 {
+  margin-top: 0;
+  font-size: 26px;
+}
+
+.alert-advice {
+  border-top: 3px solid #000000;
+  margin-top: 20px;
+  padding-top: 15px;
+}
+
+/* NOTIFICATIONS */
+
+.notification-count {
+  border: 4px solid #000000;
+  padding: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.notification-card {
+  border: 3px solid #000000;
+  padding: 22px;
+  margin: 20px 0;
+  display: flex;
+  gap: 20px;
+  border-radius: 8px;
+}
+
+.notification-icon {
+  font-size: 32px;
+}
+
+.notification-card h3 {
+  margin-top: 0;
+}
+
+/* BACK BUTTON */
+
+.back-button {
+  background: #ffffff;
+  color: #000000;
+  border: 4px solid #000000;
+  padding: 18px 25px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 25px;
+  border-radius: 8px;
+}
+
+.back-button:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* FOOTER */
+
+.footer {
+  background: #000000;
+  color: #ffffff;
+  text-align: center;
+  padding: 25px;
+  margin-top: 30px;
+}
+
+.footer p {
+  font-size: 18px;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  .buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 38px;
+  }
+
+  .header p {
+    font-size: 19px;
+  }
+
+  .main {
+    padding: 20px 15px;
+  }
+
+  .page {
+    padding: 22px;
+  }
+
+  .contact-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buttons button {
+    min-height: 150px;
+  }
+}
+/* =========================
+   FINAL ELDER EASE POLISH
+========================= */
+
+/* Make all buttons easy to see and press */
+
+button {
+  min-height: 60px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Improve keyboard accessibility */
+
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 5px solid #000000;
+  outline-offset: 3px;
+}
+
+/* Better welcome section */
+
+.welcome {
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #000000;
+}
+
+/* Make home feature buttons stand out */
+
+.buttons button {
+  box-shadow: 0 5px 0 #000000;
+}
+
+.buttons button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #000000;
+}
+
+/* Improve information cards */
+
+.info-card {
+  box-shadow: 0 3px 0 #000000;
+}
+
+/* Improve emergency warning */
+
+.emergency-warning {
+  box-shadow: 0 4px 0 #000000;
+}
+
+/* Make emergency buttons very obvious */
+
+.help-button {
+  box-shadow: 0 4px 0 #000000;
+}
+
+.help-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #000000;
+}
+
+/* Voice button */
+
+.voice-button {
+  min-height: 140px;
+  border-radius: 15px;
+  box-shadow: 0 5px 0 #000000;
+}
+
+.voice-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #000000;
+}
+
+/* Better alert cards */
+
+.alert-card {
+  box-shadow: 0 3px 0 #000000;
+}
+
+/* Better notification cards */
+
+.notification-card {
+  box-shadow: 0 3px 0 #000000;
+}
+
+/* Make the back button easy to find */
+
+.back-button {
+  width: 100%;
+  margin-top: 30px;
+}
+
+/* Improve mobile experience */
+
+@media (max-width: 650px) {
+  .header {
+    padding: 28px 15px;
+  }
+
+  .header h1 {
+    font-size: 36px;
+  }
+
+  .header p {
+    font-size: 20px;
+  }
+
+  .welcome h2 {
+    font-size: 28px;
+  }
+
+  .welcome p {
+    font-size: 20px;
+  }
+
+  .buttons button {
+    min-height: 160px;
+    font-size: 34px;
+  }
+
+  .buttons strong {
+    font-size: 24px;
+  }
+
+  .buttons span {
+    font-size: 18px;
+  }
+
+  .page h2 {
+    font-size: 29px;
+  }
+
+  .page p,
+  .page li {
+    font-size: 19px;
+  }
+
+  .contact-card {
+    box-shadow: 0 3px 0 #000000;
+  }
+}
